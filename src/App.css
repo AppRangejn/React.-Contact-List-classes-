@@ -1,0 +1,40 @@
+.App {
+  max-width: 1000px;
+  margin: 40px auto;
+}
+
+.contact-list-container {
+  border: 3px solid black;
+  padding: 15px;
+}
+
+.box-title {
+  border: 3px solid black;
+  text-align: center;
+  font-size: 24px;
+  padding: 6px;
+  margin-bottom: 10px;
+}
+
+.contact-box {
+  display: flex;
+  gap: 20px;
+}
+
+.button-panel {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 35px;
+  padding: 0 10px;
+}
+
+.action-btn {
+  border: 2px solid black;
+  background: white;
+  padding: 8px 25px;
+  font-size: 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: serif;
+  min-width: 90px;
+}
