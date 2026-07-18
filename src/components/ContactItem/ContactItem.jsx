@@ -1,13 +1,25 @@
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import './ContactItem.css'
 
-function ContactItem({firstName, lastName, onDoubleClick, onDelete}) {
-  return (
-    <div className="contact-item" onDoubleClick={onDoubleClick}>
+
+export class ContactItem extends Component {
+  render() {
+    const { firstName, lastName, onDoubleClick, onDelete } = this.props;
+    return (
+      <div className="contact-item" onDoubleClick={onDoubleClick}>
         <span className="contact-name">{firstName} {lastName}</span>
         <button className="clear-btn" onClick={onDelete}>X</button>
-    </div>
-  )
+      </div>
+    )
+  }
+}
+
+ContactItem.propTypes = {
+  firstName: PropTypes.string,
+  lastName: PropTypes.string,
+  onDoubleClick: PropTypes.func,
+  onDelete: PropTypes.func
 }
 
 export default ContactItem

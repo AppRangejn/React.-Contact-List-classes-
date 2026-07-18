@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import './ContactList.css'
 import ContactItem from '../ContactItem/ContactItem'
 
-function ContactList({ contacts, onSelectContact, onDeleteContact }) {
-  return (
-    <div className="contact-list">
+export class ContactList extends Component {
+  render() {
+    const { contacts, onSelectContact, onDeleteContact } = this.props;
+    return (
+      <div className="contact-list">
         {contacts.map(contact => (
           <ContactItem
             key={contact.id}
@@ -14,8 +17,20 @@ function ContactList({ contacts, onSelectContact, onDeleteContact }) {
             onDelete={() => onDeleteContact(contact.id)}
           />
         ))}
-    </div>
-  )
+      </div>
+    )
+  }
 }
+
+ContactList.propTypes = {
+  contacts: PropTypes.array,
+  onSelectContact: PropTypes.func,
+  onDeleteContact: PropTypes.func
+}
+
+ContactList.defaultProps = {
+  contacts: []
+}
+
 
 export default ContactList
