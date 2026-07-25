@@ -1,10 +1,7 @@
-import { Component } from 'react'
 import './ContactList.css'
 import ContactItem from '../ContactItem/ContactItem'
 
-export class ContactList extends Component {
-  render() {
-    const { contacts, onDelete, onAddContact, onEditContact } = this.props
+function ContactList({ contacts, onDelete, onAddContact, onEditContact }) {
     return (
       <div className="contact-list">
         {contacts.map(contact => (
@@ -17,9 +14,7 @@ export class ContactList extends Component {
         ))}
         <button className="action-btn" onClick={onAddContact}>New</button>
       </div>
-      
     )
-  }
 }
 
 export default ContactList

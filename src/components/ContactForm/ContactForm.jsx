@@ -1,82 +1,71 @@
-import { Component } from 'react'
+import { useState, useEffect } from 'react'
 import './ContactForm.css'
 
-export class ContactForm extends Component {
-  state = {
-    ...this.props.contactForEdit,
+function ContactForm({ contactForEdit, onSubmit, onDelete }) {
+
+  const [formData, setFormData] = useState(contactForEdit)
+
+  useEffect(() => {
+    setFormData(contactForEdit)
+  }, [contactForEdit])
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (state.id === props.contactForEdit.id) {
-      return null
-    }
-    return {
-      ...props.contactForEdit,
-    }
+  const handleClearField = (fieldName) => {
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: ''
+    }))
   }
 
-  setFirstName = (value) => {
-    this.setState({ firstName: value })
-  }
+  const handleSubmit = () => {
+    const { firstName, lastName, email, phone } = formData
 
-  setLastName = (value) => {
-    this.setState({ lastName: value })
-  }
+    const isValid = firstName.trim() && lastName.trim() && email.trim() && phone.trim()
 
-  setEmail = (value) => {
-    this.setState({ email: value })
-  }
-
-  setPhone = (value) => {
-    this.setState({ phone: value })
-  }
-
-  handleSubmit = () => {
-    const { id, firstName, lastName, email, phone } = this.state
-
-    if (!firstName || !lastName || !email || !phone) {
-      return
-    }
-
-    this.props.onSubmit({ id, firstName, lastName, email, phone })
-  }
-
-  handleDelete = () => {
-    if (this.state.id) {
-      this.props.onDelete(this.state.id)
+    if (isValid) {
+      onSubmit(formData)
     }
   }
 
-  render() {
-    const { id, firstName, lastName, email, phone } = this.state
+  const handleDelete = () => {
+    if (formData.id) {
+      onDelete(formData.id)
+    }
+  }
 
-    return (
-      <div className="contact-form">
+  return (
+    <div className="contact-form">
         <div className="input-form">
-          <input type="text" placeholder="First Name" value={firstName} onChange={(e) => this.setFirstName(e.target.value)} />
-          <button className="clear-input-btn" onClick={() => this.setFirstName('')}>X</button>
+          <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange}/>
+          <button className="clear-input-btn" onClick={() => handleClearField('firstName')}>X</button>
         </div>
         <div className="input-form">
-          <input type="text" placeholder="Last Name" value={lastName} onChange={(e) => this.setLastName(e.target.value)} />
-          <button className="clear-input-btn" onClick={() => this.setLastName('')}>X</button>
+          <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
+          <button className="clear-input-btn" onClick={() => handleClearField('lastName')}>X</button>
         </div>
         <div className="input-form">
-          <input type="email" placeholder="Email" value={email} onChange={(e) => this.setEmail(e.target.value)} />
-          <button className="clear-input-btn" onClick={() => this.setEmail('')}>X</button>
+          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+          <button className="clear-input-btn" onClick={() => handleClearField('email')}>X</button>
         </div>
         <div className="input-form">
-          <input type="text" placeholder="Phone" value={phone} onChange={(e) => this.setPhone(e.target.value)} />
-          <button className="clear-input-btn" onClick={() => this.setPhone('')}>X</button>
+          <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
+          <button className="clear-input-btn" onClick={() => handleClearField('phone')}>X</button>
         </div>
         <div className="button-panel">
-          <button className="action-btn" onClick={this.handleSubmit}>Save</button>
-          {id && (
-            <button className="action-btn" onClick={this.handleDelete}>Delete</button>
+          <button className="action-btn" onClick={handleSubmit}>Save</button>
+          {formData.id && (
+            <button className="action-btn" onClick={handleDelete}>Delete</button>
           )}
         </div>
       </div>
-    )
-  }
+  )
 }
 
 export default ContactForm
