@@ -5,8 +5,8 @@ function ContactForm({ contactForEdit, onSubmit, onDelete }) {
 
   const [formData, setFormData] = useState(contactForEdit)
 
-  useEffect(() => {
-    setFormData(contactForEdit)
+  useEffect(() => { 
+    setFormData(contactForEdit) // eslint-disable-line
   }, [contactForEdit])
 
   const handleChange = (e) => {
@@ -17,7 +17,8 @@ function ContactForm({ contactForEdit, onSubmit, onDelete }) {
     }))
   }
 
-  const handleClearField = (fieldName) => {
+  const handleClearField = (e, fieldName) => {
+    e.preventDefault()
     setFormData(prev => ({
       ...prev,
       [fieldName]: ''
@@ -35,28 +36,26 @@ function ContactForm({ contactForEdit, onSubmit, onDelete }) {
   }
 
   const handleDelete = () => {
-    if (formData.id) {
       onDelete(formData.id)
-    }
   }
 
   return (
     <div className="contact-form">
         <div className="input-form">
           <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange}/>
-          <button className="clear-input-btn" onClick={() => handleClearField('firstName')}>X</button>
+          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'firstName')}>X</button>
         </div>
         <div className="input-form">
           <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
-          <button className="clear-input-btn" onClick={() => handleClearField('lastName')}>X</button>
+          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'lastName')}>X</button>
         </div>
         <div className="input-form">
           <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-          <button className="clear-input-btn" onClick={() => handleClearField('email')}>X</button>
+          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'email')}>X</button>
         </div>
         <div className="input-form">
           <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-          <button className="clear-input-btn" onClick={() => handleClearField('phone')}>X</button>
+          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'phone')}>X</button>
         </div>
         <div className="button-panel">
           <button className="action-btn" onClick={handleSubmit}>Save</button>

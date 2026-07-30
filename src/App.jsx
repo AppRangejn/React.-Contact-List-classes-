@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { nanoid } from 'nanoid'
 import './App.css'
 import ContactList from './components/ContactList/ContactList'
 import ContactForm from './components/ContactForm/ContactForm'
@@ -13,27 +14,36 @@ const createEmptyContact = () => ({
 
 function App() {
 
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem('contacts')
-    return savedContacts ? JSON.parse(savedContacts) : []
-  })
-
+  const [contacts, setContacts] = useState([])
   const [contactForEdit, setContactForEdit] = useState(createEmptyContact)
 
   useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts))
-  }, [contacts])
+    const savedContacts = localStorage.getItem('contacts')
+    if (savedContacts) {
+      setContacts(JSON.parse(savedContacts)) // eslint-disable-line
+    }
+  }, [])
+
+  const saveToLocalStorage = (updatedContacts) => {
+    localStorage.setItem('contacts', JSON.stringify(updatedContacts))
+  }
 
   const createContact = (contact) => {
-    const newContact = { ...contact, id: Date.now() }
-    setContacts(prevContacts => [...prevContacts, newContact])
+    const newContact = { ...contact, id: nanoid() }
+    const newContacts = [...contacts, newContact]
+
+    setContacts(newContacts)
+    saveToLocalStorage(newContacts)
     setContactForEdit(createEmptyContact())
   }
 
   const updateContact = (contact) => {
-    setContacts(prevContacts =>
-      prevContacts.map(item => (item.id === contact.id ? contact : item))
+    const newContacts = contacts.map(item =>
+      item.id === contact.id ? contact : item
     )
+
+    setContacts(newContacts)
+    saveToLocalStorage(newContacts)
     setContactForEdit(contact)
   }
 
@@ -46,11 +56,11 @@ function App() {
   }
 
   const deleteContact = (id) => {
-    setContacts(prevContacts => prevContacts.filter(contact => contact.id !== id))
-    
-    if (contactForEdit.id === id) {
-      setContactForEdit(createEmptyContact())
-    }
+    const newContacts = contacts.filter(contact => contact.id !== id)
+
+    setContacts(newContacts)
+    saveToLocalStorage(newContacts)
+    setContactForEdit(createEmptyContact())
   }
 
   const addNewContact = () => {
