@@ -1,7 +1,8 @@
 import axios from 'axios'
+import { BASE_URL } from '../constants/constants'
 
 const api = axios.create({
-    baseURL: 'http://localhost:5000/contacts/',
+    baseURL: BASE_URL,
     headers: { 'Content-Type': 'application/json'},
 });
 

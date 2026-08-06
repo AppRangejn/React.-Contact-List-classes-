@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import './ContactForm.css'
+import api from '../../api/contact-service'
+import { addContactAction, updateContactAction, deleteContactAction, resetContactAction } from '../../store/actions/contactActions'
 
-function ContactForm({ contactForEdit, onSubmit, onDelete }) {
+function ContactForm() {
+  const dispatch = useDispatch()
+  const contactForEdit = useSelector((state) => state.contactsList.contactForEdit)
 
   const [formData, setFormData] = useState(contactForEdit)
 
@@ -25,45 +30,70 @@ function ContactForm({ contactForEdit, onSubmit, onDelete }) {
     }))
   }
 
-  const handleSubmit = () => {
-    const { firstName, lastName, email, phone } = formData
+  const createContact = () => {
+    api.post('/contacts', formData).then(({ data }) => {
+      dispatch(addContactAction(data))
+      dispatch(resetContactAction())
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 
-    const isValid = firstName.trim() && lastName.trim() && email.trim() && phone.trim()
+  const updateContact = () => {
+    api.put(`/contacts/${formData.id}`, formData).then(({ data }) => {
+      dispatch(updateContactAction(data))
+    })
+    .catch((error) => {
+      console.log(error)
+    })
+  }
 
-    if (isValid) {
-      onSubmit(formData)
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    if(!formData.id) {
+      createContact()
+    } else {
+      updateContact()
     }
   }
 
-  const handleDelete = () => {
-      onDelete(formData.id)
+  const handleDelete = (e) => {
+      e.preventDefault()
+      api.delete(`/contacts/${formData.id}`).then(() => {
+        dispatch(deleteContactAction(formData.id))
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   return (
-    <div className="contact-form">
+    <form className="contact-form" onSubmit={handleSubmit}>
         <div className="input-form">
           <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange}/>
-          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'firstName')}>X</button>
+          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'firstName')}>X</button>
         </div>
         <div className="input-form">
           <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
-          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'lastName')}>X</button>
+          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'lastName')}>X</button>
         </div>
         <div className="input-form">
           <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'email')}>X</button>
+          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'email')}>X</button>
         </div>
         <div className="input-form">
           <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-          <button className="clear-input-btn" onClick={(e) => handleClearField(e, 'phone')}>X</button>
+          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'phone')}>X</button>
         </div>
         <div className="button-panel">
-          <button className="action-btn" onClick={handleSubmit}>Save</button>
+          <button type="submit" className="action-btn">Save</button>
           {formData.id && (
-            <button className="action-btn" onClick={handleDelete}>Delete</button>
+            <button type="button" className="action-btn" onClick={handleDelete}>Delete</button>
           )}
         </div>
-      </div>
+      </form>
   )
 }
 

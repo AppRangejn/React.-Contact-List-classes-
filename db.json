@@ -1,11 +1,11 @@
 {
   "contacts": [
     {
+      "id": "Y3edfTqquZw",
       "firstName": "Кіріл",
       "lastName": "Бричковський",
       "email": "kiril0302ua@gmail.com",
-      "phone": "432",
-      "id": "D_7j3alGR1k"
+      "phone": "5435543"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
