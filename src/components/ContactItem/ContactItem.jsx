@@ -1,20 +1,19 @@
 import { useDispatch } from 'react-redux'
 import './ContactItem.css'
-import api from '../../api/contact-service'
-import { deleteContactAction, selectContactAction } from '../../store/actions/contactActions'
+import { delContact, selectContact } from '../../store/slices/contactSlice'
 
 function ContactItem({ contact}) {
   const dispatch = useDispatch()
 
   const onItemDelete = () => {
-    api.delete(`/contacts/${contact.id}`).then(() => dispatch(deleteContactAction(contact.id)))
+    dispatch(delContact(contact.id))
     .catch((error) => {
       console.log(error)
     })
   }
 
   const onContactEdit = () => {
-    dispatch(selectContactAction(contact))
+    dispatch(selectContact(contact))
   }
 
   return (

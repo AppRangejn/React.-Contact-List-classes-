@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import api from '../../api/api'
+import api from '../../api/contact-service'
 import { contactsState } from '../../model/initialContacts'
 import { CONTACTS_SLICE_NAME } from '../../constants/constants'
 
-const initiaState = {
+const initialState = {
+    selectedContact: null,
     contacts: contactsState,
     isFetching: false,
 }
@@ -33,7 +34,7 @@ export const delContact = createAsyncThunk(
             if(response.status >= 400) {
                 throw new Error('Cant delete contact.Error status is ${response.status}')
             }
-            dispatch(removeContact({id}))
+            dispatch(removeContact(id))
 
         } catch (error) {
             rejectWithValue(error.message)
@@ -44,8 +45,7 @@ export const delContact = createAsyncThunk(
 
 export const updateContact = createAsyncThunk(
     `${CONTACTS_SLICE_NAME}/updateContact`,
-    async (contact, { rejectWithValue, dispatch, getState }) => {
-        const contact = getState().contactList.contacts.find(contact => contact.id === contact.id)
+    async (contact, { rejectWithValue, dispatch }) => {
         try{
             const response = await api.put(`${CONTACTS_SLICE_NAME}/${contact.id}`, contact)
             if(response.status >= 400) {
@@ -53,7 +53,6 @@ export const updateContact = createAsyncThunk(
             }
             const { data } = response
             dispatch(changeContact(data))
-            
 
 
         } catch (error) {
@@ -94,15 +93,34 @@ const contactSlice = createSlice({
             state.contacts = state.contacts.map(contact => {
                 return contact.id === payload.id ? payload : contact
             }) 
+        },
+        resetContact: (state) => {
+            state.selectedContact = null
+        },
+        selectContact: (state, { payload }) => {
+            state.selectedContact = payload
         }
     },
     extraReducers: (builder) => {
         builder.addCase(getContacts.fulfilled, (state, { payload }) => {
             state.isFetching = false
-            State.contacts = payload
+            state.contacts = payload
+            state.error = null
         })
+        builder.addCase(getContacts.pending, setFetching)
+        builder.addCase(getContacts.rejected, setError)
+
         builder.addCase(addContact.pending, setFetching)
         builder.addCase(addContact.rejected, setError)
+        builder.addCase(addContact.fulfilled, (state, { payload }) => {
+            state.isFetching = false
+            state.error = null
+            state.contacts.push(payload)
+        })
+        builder.addCase(delContact.pending, setFetching)
+        builder.addCase(delContact.rejected, setError)
+        builder.addCase(updateContact.pending, setFetching)
+        builder.addCase(updateContact.rejected, setError)
     }
 })
 
@@ -118,6 +136,6 @@ const setFetching = (state) => {
 
 const { actions, reducer } = contactSlice
 
-export const { createContact, removeContact, changeContact } = actions
+export const { createContact, removeContact, changeContact, resetContact, selectContact } = actions
 
 export default reducer

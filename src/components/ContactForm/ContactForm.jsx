@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import './ContactForm.css'
-import api from '../../api/contact-service'
-import { addContactAction, updateContactAction, deleteContactAction, resetContactAction } from '../../store/actions/contactActions'
+import { addContact, updateContact, delContact, resetContact } from '../../store/slices/contactSlice'
+import { DEFAULT_CONTACT } from '../../constants/constants'
+
 
 function ContactForm() {
   const dispatch = useDispatch()
-  const contactForEdit = useSelector((state) => state.contactsList.contactForEdit)
+  const selectedContact = useSelector((state) => state.contactList.selectedContact)
 
-  const [formData, setFormData] = useState(contactForEdit)
+  const [formData, setFormData] = useState(selectedContact || DEFAULT_CONTACT)
 
   useEffect(() => { 
-    setFormData(contactForEdit) // eslint-disable-line
-  }, [contactForEdit])
+    setFormData(selectedContact || DEFAULT_CONTACT) // eslint-disable-line
+  }, [selectedContact])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -31,22 +32,12 @@ function ContactForm() {
   }
 
   const createContact = () => {
-    api.post('/contacts', formData).then(({ data }) => {
-      dispatch(addContactAction(data))
-      dispatch(resetContactAction())
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+      dispatch(addContact(formData))
+      
   }
 
-  const updateContact = () => {
-    api.put(`/contacts/${formData.id}`, formData).then(({ data }) => {
-      dispatch(updateContactAction(data))
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+  const handleUpdateContact = () => {
+      dispatch(updateContact(formData))
   }
 
   const handleSubmit = (e) => {
@@ -55,18 +46,14 @@ function ContactForm() {
     if(!formData.id) {
       createContact()
     } else {
-      updateContact()
+      handleUpdateContact()
     }
   }
 
   const handleDelete = (e) => {
       e.preventDefault()
-      api.delete(`/contacts/${formData.id}`).then(() => {
-        dispatch(deleteContactAction(formData.id))
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+        dispatch(delContact(formData.id))
+        dispatch(resetContact())
   }
 
   return (
