@@ -7,9 +7,6 @@ function ContactItem({ contact}) {
 
   const onItemDelete = () => {
     dispatch(delContact(contact.id))
-    .catch((error) => {
-      console.log(error)
-    })
   }
 
   const onContactEdit = () => {

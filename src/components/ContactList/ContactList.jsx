@@ -10,9 +10,6 @@ function ContactList() {
 
     useEffect(() => {
         dispatch(getContacts())
-        .catch((error) => {
-            console.log(error)
-        })
     }, [dispatch])
 
     const onAddContact = () => {

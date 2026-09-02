@@ -7,6 +7,7 @@ const initialState = {
     selectedContact: null,
     contacts: contactsState,
     isFetching: false,
+    error: null,
 }
 
 export const getContacts = createAsyncThunk(

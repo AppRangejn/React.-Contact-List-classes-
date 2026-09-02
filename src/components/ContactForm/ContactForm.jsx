@@ -23,11 +23,11 @@ function ContactForm() {
     }))
   }
 
-  const handleClearField = (e, fieldName) => {
-    e.preventDefault()
+  const handleClearField = (e) => {
+    const { name } = e.target
     setFormData(prev => ({
       ...prev,
-      [fieldName]: ''
+      [name]: ''
     }))
   }
 
@@ -40,9 +40,7 @@ function ContactForm() {
       dispatch(updateContact(formData))
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-
+  const handleSubmit = () => {
     if(!formData.id) {
       createContact()
     } else {
@@ -60,19 +58,19 @@ function ContactForm() {
     <form className="contact-form" onSubmit={handleSubmit}>
         <div className="input-form">
           <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange}/>
-          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'firstName')}>X</button>
+          <button type="button" name="firstName" className="clear-input-btn" onClick={handleClearField}>X</button>
         </div>
         <div className="input-form">
           <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
-          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'lastName')}>X</button>
+          <button type="button" name="lastName" className="clear-input-btn" onClick={handleClearField}>X</button>
         </div>
         <div className="input-form">
           <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'email')}>X</button>
+          <button type="button" name="email" className="clear-input-btn" onClick={handleClearField}>X</button>
         </div>
         <div className="input-form">
           <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-          <button type="button" className="clear-input-btn" onClick={(e) => handleClearField(e, 'phone')}>X</button>
+          <button type="button" name="phone" className="clear-input-btn" onClick={handleClearField}>X</button>
         </div>
         <div className="button-panel">
           <button type="submit" className="action-btn">Save</button>
