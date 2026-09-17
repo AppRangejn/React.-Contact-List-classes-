@@ -15,12 +15,12 @@ function ContactForm() {
     enableReinitialize: true,
     validationSchema: contactValidationSchema,
     validateOnMount: true,
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: async (values, { resetForm }) => {
       if (!values.id) {
         
-        dispatch(addContact(values))
+        await dispatch(addContact(values)).unwrap()
       } else {
-        dispatch(updateContact(values))
+        await dispatch(updateContact(values)).unwrap()
       }
       dispatch(resetContact())
       resetForm({ values: DEFAULT_CONTACT })

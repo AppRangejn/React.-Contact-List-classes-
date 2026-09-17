@@ -1,25 +1,11 @@
 {
   "contacts": [
     {
-      "firstName": "Кірілgr",
-      "lastName": "Бричковський",
-      "email": "kiril0302ua@gmail.com",
-      "phone": "380969851708",
-      "id": "HnA8LjeGo8w"
-    },
-    {
       "firstName": "Кіріл",
       "lastName": "Бричковський",
       "email": "kiril0302ua@gmail.com",
       "phone": "380969851708",
       "id": "na0Z_dD3x6c"
-    },
-    {
-      "firstName": "Кіріл",
-      "lastName": "Бричковський",
-      "email": "kiril0302ua@gmail.com",
-      "phone": "43234432342",
-      "id": "pAUpC--H39c"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
