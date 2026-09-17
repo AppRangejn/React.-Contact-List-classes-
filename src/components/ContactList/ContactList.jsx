@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import './ContactList.css'
+import { Box, Stack, Button, Typography } from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 import ContactItem from '../ContactItem/ContactItem'
 import { getContacts, resetContact } from '../../store/slices/contactSlice'
 
@@ -17,15 +18,42 @@ function ContactList() {
     }
 
     return (
-      <div className="contact-list">
-        {contacts.map(contact => (
-          <ContactItem
-            key={contact.id}
-            contact={contact}
-          />
-        ))}
-        <button type="button" className="action-btn" onClick={onAddContact}>New</button>
-      </div>
+      <Box sx={{ flex: 1, width: '100%' }}>
+      <Stack spacing={2}>
+        <Typography
+          variant="h6"
+          sx={{
+            fontFamily: '"Roboto Mono", monospace',
+          }}
+        >
+          Contacts
+        </Typography>
+
+        {contacts?.length === 0 && (
+          <Typography
+            variant="body2"
+            sx={{ fontFamily: '"Roboto Mono", monospace' }}
+          >
+            Contacts is empty
+          </Typography>
+        )}
+
+        <Stack spacing={1}>
+          {Array.isArray(contacts) &&
+            contacts.map((contact) => (
+              <ContactItem key={contact.id} contact={contact} />
+            ))}
+        </Stack>
+
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={onAddContact}
+        >
+          New Contact
+        </Button>
+      </Stack>
+    </Box>
     )
 }
 

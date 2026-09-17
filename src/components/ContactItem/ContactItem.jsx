@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
-import './ContactItem.css'
+import { Paper, Typography, IconButton } from '@mui/material'
+import ClearIcon from '@mui/icons-material/Clear'
 import { delContact, selectContact } from '../../store/slices/contactSlice'
 
 function ContactItem({ contact}) {
@@ -14,12 +15,31 @@ function ContactItem({ contact}) {
   }
 
   return (
-    <div className="contact-item" onDoubleClick={onContactEdit}>
-      <span className="contact-name">
+    <Paper variant="outlined" onDoubleClick={onContactEdit}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        p: 1.5,
+        '&:hover': {
+          borderColor: 'primary.light',
+        },
+      }}
+    >
+      <Typography
+        variant="body1"
+        sx={{
+          fontWeight: 500,
+          fontFamily: '"Roboto Mono", monospace',
+        }}
+      >
         {contact.firstName} {contact.lastName}
-      </span>
-      <button type="button" className="clear-btn" onClick={onItemDelete}>X</button>
-    </div>
+      </Typography>
+
+      <IconButton size="small" onClick={onItemDelete}>
+        <ClearIcon fontSize="small" />
+      </IconButton>
+    </Paper>
   )
 }
 

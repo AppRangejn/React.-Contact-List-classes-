@@ -8,3 +8,4 @@ export const DEFAULT_CONTACT = {
     email: '',
     phone: ''
 }
+

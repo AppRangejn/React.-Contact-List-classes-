@@ -1,84 +1,83 @@
-import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import './ContactForm.css'
+import { useFormik } from 'formik'
 import { addContact, updateContact, delContact, resetContact } from '../../store/slices/contactSlice'
 import { DEFAULT_CONTACT } from '../../constants/constants'
-
+import { contactValidationSchema } from '../../validation/contactSchema'
+import { AppTextField } from '../common/AppTextField'
+import { Box, Button, Stack, Typography } from '@mui/material'
 
 function ContactForm() {
   const dispatch = useDispatch()
   const selectedContact = useSelector((state) => state.contactList.selectedContact)
 
-  const [formData, setFormData] = useState(selectedContact || DEFAULT_CONTACT)
+  const formik = useFormik({
+    initialValues: selectedContact || DEFAULT_CONTACT,
+    enableReinitialize: true,
+    validationSchema: contactValidationSchema,
+    validateOnMount: true,
+    onSubmit: (values, { resetForm }) => {
+      if (!values.id) {
+        
+        dispatch(addContact(values))
+      } else {
+        dispatch(updateContact(values))
+      }
+      dispatch(resetContact())
+      resetForm({ values: DEFAULT_CONTACT })
+    },
+  })
 
-  useEffect(() => { 
-    setFormData(selectedContact || DEFAULT_CONTACT) // eslint-disable-line
-  }, [selectedContact])
-
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-  }
-
-  const handleClearField = (e) => {
-    const { name } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: ''
-    }))
-  }
-
-  const createContact = () => {
-      dispatch(addContact(formData))
-      
-  }
-
-  const handleUpdateContact = () => {
-      dispatch(updateContact(formData))
-  }
-
-  const handleSubmit = () => {
-    if(!formData.id) {
-      createContact()
-    } else {
-      handleUpdateContact()
+  const handleDelete = (e) => {
+    e.preventDefault()
+    if (formik.values.id) {
+      dispatch(delContact(formik.values.id))
+      dispatch(resetContact())
     }
   }
 
-  const handleDelete = (e) => {
-      e.preventDefault()
-        dispatch(delContact(formData.id))
-        dispatch(resetContact())
-  }
+  const isSaveDisabled = formik.values.id
+    ? !formik.isValid || formik.isSubmitting
+    : !formik.isValid || !formik.dirty || formik.isSubmitting
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
-        <div className="input-form">
-          <input type="text" name="firstName" placeholder="First Name" value={formData.firstName} onChange={handleChange}/>
-          <button type="button" name="firstName" className="clear-input-btn" onClick={handleClearField}>X</button>
-        </div>
-        <div className="input-form">
-          <input type="text" name="lastName" placeholder="Last Name" value={formData.lastName} onChange={handleChange} />
-          <button type="button" name="lastName" className="clear-input-btn" onClick={handleClearField}>X</button>
-        </div>
-        <div className="input-form">
-          <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
-          <button type="button" name="email" className="clear-input-btn" onClick={handleClearField}>X</button>
-        </div>
-        <div className="input-form">
-          <input type="text" name="phone" placeholder="Phone" value={formData.phone} onChange={handleChange} />
-          <button type="button" name="phone" className="clear-input-btn" onClick={handleClearField}>X</button>
-        </div>
-        <div className="button-panel">
-          <button type="submit" className="action-btn">Save</button>
-          {formData.id && (
-            <button type="button" className="action-btn" onClick={handleDelete}>Delete</button>
+    <Box
+      component="form"
+      onSubmit={formik.handleSubmit}
+      sx={{ flex: 1, width: '100%' }}
+    >
+      <Stack spacing={2}>
+        <Typography variant="h6" sx={{ fontFamily: '"Roboto Mono", monospace' }}>
+          {formik.values.id ? 'Edit Contact' : 'New Contact'}
+        </Typography>
+
+        <AppTextField name="firstName" label="First Name" formik={formik} />
+        <AppTextField name="lastName" label="Last Name" formik={formik} />
+        <AppTextField name="email" label="Email" type="email" formik={formik} />
+        <AppTextField name="phone" label="Phone" formik={formik} />
+
+        <Stack direction="row" spacing={2}>
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isSaveDisabled}
+            fullWidth
+          >
+            Save
+          </Button>
+
+          {formik.values.id && (
+            <Button
+              type="button"
+              variant="outlined"
+              color="error"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
           )}
-        </div>
-      </form>
+        </Stack>
+      </Stack>
+    </Box>
   )
 }
 
