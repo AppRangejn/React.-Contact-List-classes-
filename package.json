@@ -12,9 +12,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^9.4.0",
+    "@mui/material": "^9.4.0",
     "@redux-devtools/extension": "^4.0.0",
     "@reduxjs/toolkit": "^2.12.0",
     "axios": "^1.19.0",
+    "formik": "^2.4.9",
     "json-server": "^1.0.0-beta.15",
     "nanoid": "^6.0.0",
     "prop-types": "^15.8.1",
@@ -22,7 +27,8 @@
     "react-dom": "^19.2.7",
     "react-redux": "^9.3.0",
     "redux": "^5.0.1",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
